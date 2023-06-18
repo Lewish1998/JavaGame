@@ -4,6 +4,7 @@ import main.GamePanel;
 import main.KeyHandler;
 import main.UtilityTool;
 
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -29,7 +30,7 @@ public class Player extends Entity{
     solidArea.x = 8;
     solidArea.y =16;
     solidAreaDefaultX = solidArea.x;
-    getSolidAreaDefaultY = solidArea.y;
+    solidAreaDefaultY = solidArea.y;
     solidArea.width = 28;
     solidArea.height = 28;
 
@@ -72,12 +73,19 @@ public class Player extends Entity{
 
       }
 
+      // CHECK TILE COLLISION
       collisionOn = false;
       gp.cChecker.checkTile(this);
 
+      // CHECK OBJECT COLLISION
       int objIndex = gp.cChecker.checkObject(this, true);
       pickupObject(objIndex);
 
+      // CHECK NPC COLLISION
+      int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
+      interactNPC(npcIndex);
+
+      // IF COLLISION FALSE PLAYER CAN MOVE
       if(collisionOn == false){
         switch (direction){
           case "up": worldY -= speed; break;
@@ -100,11 +108,22 @@ public class Player extends Entity{
   }
 
   public void pickupObject(int i){
-
     if (i != 999){
 
     }
   }
+
+  public void interactNPC(int i) {
+    if (i != 999) {
+
+      if (gp.keyH.enterPressed == true) {
+        gp.gameState = gp.dialogueState;
+        gp.npc[i].speak();
+      }
+    }
+    gp.keyH.enterPressed = false;
+  }
+
 
   public void draw(Graphics2D g2){
 //    g2.setColor(Color.white);
